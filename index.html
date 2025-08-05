@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Withdraw Bot</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
+        h1 { color: #333; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #eee; }
+    </style>
+</head>
+<body>
+    <h1>รายการถอนล่าสุด</h1>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>ชื่อ</th>
+                <th>เบอร์</th>
+                <th>จำนวน</th>
+                <th>เวลา</th>
+                <th>สถานะ</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function loadData() {
+            const url = "https://script.google.com/macros/s/AKfycbyZuAM9nD80aHldvpknpsY5Cvjz2FXbCIaQ4_y6bC8J7GyONPZtBrHFUrTKboYK/exec";
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                const tbody = document.querySelector("#data-table tbody");
+                tbody.innerHTML = "";
+
+                data.forEach(item => {
+                    const row = `<tr>
+                        <td>${item["ชื่อ"]}</td>
+                        <td>${item["เบอร์"]}</td>
+                        <td>${item["จำนวน"]}</td>
+                        <td>${item["เวลา"]}</td>
+                        <td>${item["สถานะ"]}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
