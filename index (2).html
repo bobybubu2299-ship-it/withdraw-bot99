@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายการถอนเงินประจำวัน</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #0b0f0d;
+        color: white;
+        margin: 0;
+        padding: 20px;
+    }
+    h2 {
+        text-align: center;
+        color: #fff;
+    }
+    .card {
+        background-color: #111c17;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #0f3025;
+    }
+    .left {
+        display: flex;
+        flex-direction: column;
+    }
+    .name {
+        font-weight: bold;
+    }
+    .phone {
+        color: #aaa;
+    }
+    .time, .ref {
+        font-size: 12px;
+        color: #ccc;
+    }
+    .amount {
+        font-weight: bold;
+        color: #00ff99;
+        font-size: 18px;
+    }
+    .status {
+        font-size: 14px;
+    }
+    .pending {
+        color: orange;
+    }
+    .done {
+        color: #00ff99;
+    }
+</style>
+</head>
+<body>
+<h2>รายการถอนเงินประจำวัน</h2>
+<div id="list"></div>
+<script>
+function randomName() {
+    const names = ["กชพรรณ", "กุลนันท์", "วาสนา", "มุกดา", "ปกรณ์", "ศราวุฒิ", "นฤมล", "จิราพร"];
+    return names[Math.floor(Math.random() * names.length)];
+}
+function randomPhone() {
+    let start = Math.floor(Math.random() * 900 + 60);
+    let end = Math.floor(Math.random() * 900 + 100);
+    return `0${start}-XXXX-${end}`;
+}
+function randomAmount() {
+    return (Math.floor(Math.random() * 99000) + 1000).toLocaleString();
+}
+function randomTime() {
+    let now = new Date();
+    return now.toLocaleDateString('th-TH', { day: '2-digit', month: 'short', year: 'numeric' }) + " " + 
+           now.toLocaleTimeString('th-TH');
+}
+function randomRef() {
+    return "REF#" + Math.floor(Math.random() * 9999999);
+}
+function createCard(name, phone, amount, time, ref, status) {
+    return `
+    <div class="card">
+        <div class="left">
+            <span class="name">${name} (${phone})</span>
+            <span class="time">${time}</span>
+            <span class="ref">${ref}</span>
+        </div>
+        <div style="text-align:right;">
+            <div class="amount">${amount} ฿</div>
+            <div class="status ${status === "โอนแล้ว" ? "done" : "pending"}">${status}</div>
+        </div>
+    </div>`;
+}
+function updateList() {
+    let html = "";
+    for (let i = 0; i < 5; i++) {
+        let status = Math.random() > 0.2 ? "โอนแล้ว" : "กำลังโอน";
+        html += createCard(randomName(), randomPhone(), randomAmount(), randomTime(), randomRef(), status);
+    }
+    document.getElementById("list").innerHTML = html;
+
+    // Change all "กำลังโอน" to "โอนแล้ว" quickly
+    setTimeout(() => {
+        document.querySelectorAll(".pending").forEach(el => {
+            el.textContent = "โอนแล้ว";
+            el.classList.remove("pending");
+            el.classList.add("done");
+        });
+    }, 3000);
+}
+// First load
+updateList();
+// Auto refresh every 8 seconds
+setInterval(updateList, 8000);
+</script>
+</body>
+</html>
